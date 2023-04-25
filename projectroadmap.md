@@ -6,7 +6,7 @@
 - [x] Run and evaluate the code
 - [x] Establish README, and Roadmap
 #Sprint 2
-- [x] Write Custom Code as prior code was far too confusing 
+- [x] Write custom code as prior code was far too confusing 
 - [x] Make the code run
 - [x] Do commits for gradual project improvements
 - [] Create saveable stats file for each player 
