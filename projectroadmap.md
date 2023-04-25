@@ -6,6 +6,7 @@
 - [x] Run and evaluate the code
 - [x] Establish README, and Roadmap
 - [x] Make the code run
+- [] Do commits for gradual project improvements
 - [] Create saveable stats file for each player 
-- [] Create Simple story line for code to be used when player meets certain conditions
+- [] Create simple story line to be used when player meets certain conditions
 - [] Make powerpoint for sprint 3
