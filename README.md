@@ -9,5 +9,5 @@ A program that can create a custom exercise program in the form of an RPG for an
 
 # ToDo
 - [X] Get code to run
-- [X] Be able to get stats to Save
-
+- [X] Be able to get stats to save
+- [X] Complete assingment
