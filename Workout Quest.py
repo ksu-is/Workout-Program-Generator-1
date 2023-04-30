@@ -1,89 +1,126 @@
 import random
 import json
+import os
 
-with open('player_stats.txt','w') as player_stats:
-    json.dump(player,player_stats)
+class Player:
+	def __init__(self, name):
+		self.name = name
+		self.level = 1
+		self.strength = 10
+		self.stamina = 10
+		self.experience = 0
 
-# Initialize the player's stats
-player = {'name': '', 'level': 1, 'strength': 10, 'stamina': 10, 'experience': 0}
+	def level_up(self):
+		self.level += 1
+		self.strength += 4
+		self.stamina += 2
+		print(f'Congratulations, you leveled up to level {self.level}!')
 
-# List of available exercises
-exercises = ['Push-ups', 'Sit-ups', 'Squats', 'Lunges', 'Plank']
+	def show_stats(self):
+		print(f'Name: {self.name}')
+		print(f'Level: {self.level}')
+		print(f'Strength: {self.strength}')
+		print(f'Stamina: {self.stamina}')
+		print(f'Experience: {self.experience}')
 
-# Function to select a random exercise from the list
+exercises = ['Push-ups', 'Sit-ups', 'Squats', 'Lunges', 'Plank', 'Quit']
+
 def select_exercise():
-    return random.choice(exercises)
+	return random.choice(exercises)
 
-# Function to display the player's stats
-def show_stats():
-    print(f'Name: {player["name"]}')
-    print(f'Level: {player["level"]}')
-    print(f'Strength: {player["strength"]}')
-    print(f'Stamina: {player["stamina"]}')
-    print(f'Experience: {player["experience"]}')
+def load_player(name):
+	if not os.path.exists('players.json'):
+		return None
 
-# Function to start the game
+	with open('players.json', 'r') as file:
+		players = json.load(file)
+
+	if name in players:
+		player_data = players[name]
+		player = Player(name)
+		player.level = player_data['level']
+		player.strength = player_data['strength']
+		player.stamina = player_data['stamina']
+		player.experience = player_data['experience']
+		return player
+	return None
+
+def save_player(player):
+	if os.path.exists('players.json'):
+		with open('players.json', 'r') as file:
+			players = json.load(file)
+	else:
+		players = {}
+
+	players[player.name] = {
+		'level': player.level,
+		'strength': player.strength,
+		'stamina': player.stamina,
+		'experience': player.experience
+	}
+
+	with open('players.json', 'w') as file:
+		json.dump(players, file)
+
 def start_game():
-    player['name'] = input('Enter your name: ')
-    # Loop through the game until the player chooses to quit
-    while True:
-        # Display the player's stats
-        show_stats()
+	name = input('Enter your name: ')
+	player = load_player(name)
 
-        # Give the player a choice of exercises
-        print('\nWhich exercise would you like to do today?')
-        for i, exercise in enumerate(exercises):
-            print(f'{i + 1}. {exercise}')
+	if player:
+		print(f'Welcome back, {player.name}!')
+		choice = input('Do you want to continue (C) or delete and start over (D)? ').lower()
+		if choice == 'd':
+			player = Player(name)
+	else:
+		player = Player(name)
 
-        # Get input from the player
-        choice = input('> ')
+	while True:
+		player.show_stats()
 
-        # Handle the player's choice
-        if choice.isdigit() and int(choice) in range(1, len(exercises) + 1):
-            exercise = exercises[int(choice) - 1]
-            reps = int(input(f'How many reps of {exercise} do you want to do? '))
-            print(f'You chose to do {reps} reps of {exercise}!')
+		print('\nWhich exercise would you like to do today?')
+		for i, exercise in enumerate(exercises):
+			print(f'{i + 1}. {exercise}')
 
-            # Calculate the player's results
-            if exercise == 'Push-ups':
-                experience = reps
-                strength = 0.33 * reps
-                stamina = 0.1 * reps
-            elif exercise == 'Sit-ups':
-                experience = reps
-                strength = 0.25 * reps
-                stamina = 0.1 * reps
-            elif exercise == 'Squats':
-                experience = reps
-                strength = 0.2 * reps
-                stamina = 0.1 * reps
-            elif exercise == 'Lunges':
-                experience = reps
-                strength = 0.2 * reps
-                stamina = 0.05 * reps
-            elif exercise == 'Plank':
-                experience = reps
-                strength = 0.1 * reps
-                stamina = 0.2 * stamina
+		choice = input('> ')
 
-            # Update the player's stats
-            player['experience'] += experience
-            player['strength'] += strength
-            player['stamina'] += stamina
+		if choice.isdigit() and int(choice) in range(1, len(exercises) + 1):
+			exercise = exercises[int(choice) - 1]
+			if exercise == 'Quit':
+				break
+			reps = int(input(f'How many reps of {exercise} do you want to do? '))
+			print(f'You chose to do {reps} reps of {exercise}!')
 
-            if player['experience'] >= 10 * player['level']:
-                player['level'] += 1
-                player['strength'] += 4
-                player['stamina'] += 2
-                print(f'Congratulations, you leveled up to level {player["level"]}!')
-        elif choice.lower() == 'quit':
-            break
-        else:
-            print('Invalid choice.')
+			if exercise == 'Push-ups':
+				experience = reps
+				strength = 0.33 * reps
+				stamina = 0.1 * reps
+			elif exercise == 'Sit-ups':
+				experience = reps
+				strength = 0.25 * reps
+				stamina = 0.1 * reps
+			elif exercise == 'Squats':
+				experience = reps
+				strength = 0.2 * reps
+				stamina = 0.1 * reps
+			elif exercise == 'Lunges':
+			  experience = reps
+			  strength = 0.2 * reps
+			  stamina = 0.05 * reps
+			elif exercise == 'Plank':
+					experience = reps
+					strength = 0.1 * reps
+					stamina = 0.2 * reps
+			player.experience += experience
+			player.strength += strength
+			player.stamina += stamina
+			if player.experience >= 10 * player.level:
+					player.level_up()
+			elif choice.lower() == 'quit':
+				break
+			else:
+				print('Invalid choice.')
 
-    # Game over
-    print(f'Thanks for playing, {player["name"]}!')
-
-# Start the game
+			save_player(player)
+			print(f'Thanks for playing, {player.name}!')
+			
 start_game()
-
