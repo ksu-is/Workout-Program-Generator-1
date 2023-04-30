@@ -9,5 +9,5 @@ A program that can create a custom exercise program in the form of an RPG for an
 
 # ToDo
 - [X] Get code to run
-- [] Be able to get stats to Save
-- [] Write a simple story line for player when they achiveve certain benchmarks
+- [X] Be able to get stats to Save
+
